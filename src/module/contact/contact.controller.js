@@ -19,11 +19,11 @@ const createContact = async(req,res)=> {
 const getAllContract = async(req,res)=> {
     try {
         const result = await Contacts.find()
-        res.status(500).json({
+        res.status(200).json({
             result
         })
     } catch (error) {
-        res.status(200).json({
+        res.status(500).json({
             error
         })
     }
@@ -86,10 +86,44 @@ const deleteContact = async (req, res) => {
 
 
 
+const makeFavourite = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const updatedContact = await Contacts.findByIdAndUpdate(
+            id,
+            { isFavorite: req.body.isFavorite },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedContact) {
+            return res.status(404).json({
+                message: "Contact not found",
+            });
+        }
+
+        res.status(200).json({
+            message: "Contact updated successfully",
+            result: updatedContact,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error.message,
+        });
+    }
+};
+
+
+
+
+
+
+
 
 module.exports = {
     createContact,
     getAllContract,
     updateContact,
-    deleteContact
+    deleteContact,
+    makeFavourite
 }
