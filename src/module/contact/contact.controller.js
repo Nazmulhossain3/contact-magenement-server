@@ -59,11 +59,37 @@ const updateContact = async (req, res) => {
 };
 
 
+const deleteContact = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Use findByIdAndDelete to find and delete the contact
+        const deletedContact = await Contacts.findByIdAndDelete(id);
+
+        if (!deletedContact) {
+            return res.status(404).json({
+                message: "Contact not found",
+            });
+        }
+
+        res.status(200).json({
+            message: "Contact deleted successfully",
+            result: deletedContact,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error.message,
+        });
+    }
+};
+
+
 
 
 
 module.exports = {
     createContact,
     getAllContract,
-    updateContact
+    updateContact,
+    deleteContact
 }
